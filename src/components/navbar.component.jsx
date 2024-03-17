@@ -1,16 +1,28 @@
 import { Link, Outlet } from "react-router-dom";
 import logo from "../imgs/logo.png";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../App";
+import UserNavigationPanel from "./user-navigation.component";
 
 const Navbar = () => {
   const [searchBoxVisibility, setSearchVisibility] = useState(false); // biến để đóng mở
+  const [userNavPanel, setUserNavPanel] = useState(false);
+  const { userAuth, userAuth: { access_token, profile_img } } = useContext(UserContext);
+  const handleUserNavPanel = () => {
+    setUserNavPanel(currentVal => !currentVal);
+  }
+  const handleBlur = () => {
+    setTimeout(() => {
+      setUserNavPanel(false);
+    }, 200
+    )
+  }
   return (
     <div>
       <nav className="navbar">
         <Link to="/" className="flex-none w-10">
           <img src={logo} className="w-full" />
         </Link>
-
         <div
           className={`absolute bg-white w-full left-0 top-full mt-0.5 border-b border-grey py-4 px-[5vw] md:boder-0 md:block md:relative md:inset-0
       md:p-0 md:w-auto md:show ${searchBoxVisibility ? "show" : "hide"}`}
@@ -32,15 +44,41 @@ const Navbar = () => {
             <i className="fi fi-rr-search text-xl"></i>
           </button>
           <Link to="/editor" className="hidden md:flex gap-2 link">
-            <i class="fi fi-rr-file-edit"></i>
+            <i className="fi fi-rr-file-edit"></i>
             <p>Write</p>
           </Link>
-          <Link className="btn-dark py-2" to="/signin">
-            Sign In
-          </Link>
-          <Link className="btn-light py-2 hidden md:block" to="/signup">
-            Sign Up
-          </Link>
+
+          {
+            access_token ?
+              <> <Link to="/dashboard/notification">
+                <button className="w-12 h-12 rounded-full bg-grey relative hover:bg-black/10">
+                  <i className="fi fi-rr-bell text-2xl block mt-1"></i>
+                </button>
+              </Link>
+                <div className="realative"
+                  onClick={handleUserNavPanel}
+                  onBlur={handleBlur}
+                >
+                  <button className="w-12 h-12 mt-1">
+                    <img src={profile_img} alt="" className="w-full h-full object-cover rounded-full" />
+                  </button>
+                  {userNavPanel
+                    ? <UserNavigationPanel /> :
+                    ""}
+
+                </div>
+              </>
+              :
+              <>
+                <Link className="btn-dark py-2" to="/signin">
+                  Sign In
+                </Link>
+                <Link className="btn-light py-2 hidden md:block" to="/signup">
+                  Sign Up
+                </Link>
+              </>
+          }
+
         </div>
       </nav>
       <Outlet />
@@ -49,3 +87,5 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
