@@ -12,12 +12,9 @@ const BlogEditor = () => {
   const handleBannerUpLoad = (e) => {
     let img = e.target.files[0];
     if (img) {
-
       let loadingToast = toast.loading("Uploadding...");
-
       uploadImage(img).then((url) => {
         if (url) {
-          console.log('received url', url)
           toast.dismiss(loadingToast)
           toast.success("Uploaded👌");
           blogBannerRef.current.src = url
@@ -25,8 +22,7 @@ const BlogEditor = () => {
       })
         .catch(err => {
           toast.dismiss(loadingToast);
-          toast.error("Upload failed: " + err.message); // Sử dụng thông báo lỗi từ thuộc tính `message` của đối tượng lỗi
-
+          return toast.error(err)
         })
     }
   }

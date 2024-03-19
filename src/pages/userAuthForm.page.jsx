@@ -52,6 +52,7 @@ const UserAuthFrom = ({ type }) => {
       }
     } if (!email.length) {
       return toast.error("Email Entered")
+
     }
     if (!emailRegex.test(email)) {
       return toast.error("Invalid email")
