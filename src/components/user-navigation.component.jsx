@@ -5,7 +5,7 @@ import { UserContext } from "../App";
 import { removeFromSession } from "../common/session";
 const UserNavigationPanel = () => {
 
-  const { userAuth: { username }, setUserAuth } = useContext(UserContext);
+  const { userAuth: { username, isAdmin }, setUserAuth } = useContext(UserContext);
 
   const signOutUser = () => {
     removeFromSession("user");
@@ -16,11 +16,13 @@ const UserNavigationPanel = () => {
   return (
     <AnimationWrapper transition={{ duration: 0.2 }}>
       <div className="right-0 absolute bg-white border w-60 border-grey duration-200">
-        <Link to="/editor" className="flex gap-2 pl-8 py-4 link md:hidden">
-          <i className="fi fi-rr-file-edit"></i>
-          <p>Write</p>
-        </Link>
-        <Link to={`user${username}`} className="link pl-8 py-4">
+        {
+          isAdmin ? <Link to="/editor" className="flex gap-2 pl-8 py-4 link md:hidden">
+            <i className="fi fi-rr-file-edit"></i>
+            <p>Write</p>
+          </Link> : ""
+        }
+        <Link to={`/user/${username}`} className="link pl-8 py-4">
           Profile
         </Link>
         <Link to="/dashboard/blogs" className="link py-4 pl-8">

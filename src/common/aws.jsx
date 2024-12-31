@@ -5,7 +5,7 @@ export const uploadImage = async (img) => {
   await axios.get(import.meta.env.VITE_SERVER_DOMAIN + "/get-upload-url")
     .then(async ({ data: { uploadURL } }) => {
       const baseUrl = uploadURL.split('?')[0];
-
+      console.log(uploadURL);
       let upload = await axios.put(uploadURL, img, {
         headers: {
           "Content-Type": img.type,
